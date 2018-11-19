@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Select</title>
+    <script>
+    window.addEventListener("load", function() {
+        var tryIt = document.getElementById("tryit");
+
+        tryIt.addEventListener("click", function () {
+            var mySelectlength = document.getElementById("mySelect").length; // Получим количество опций
+            var mySelectValue = document.getElementById("mySelect").value; // Выбранное значение
+            document.getElementById("demo").innerHTML = "количество вариантов выбора - " + mySelectlength + ". Выбранное значени: " + mySelectValue;
+        });
+
+        var mySelection = document.getElementById('mySelection');
+        var stars = ['Elijah Wood', 'Ian McKellen', 'Orlando Bloom','Ewan McGregor','Liam Neeson', 'Natalie Portman', 'Ewan McGregor', 'Billy Bob Thornton', 'Martin Freeman'];
+
+        stars.forEach( function(item, key){
+          // console.log( item )
+          var name = item.split('').reverse().join('');
+          var option;
+          if( key === 5){
+            option = new Option( item, name, null, true);
+            option.setAttribute('disabled', true);
+          } else {
+            option = new Option( item, item );
+          }
+
+          // console.log(option);
+          mySelection.appendChild(option);
+        });
+
+        // function myOption(text, value){
+        //   var myOpt = document.createElement('option');
+        //       myOpt.value = value;
+        //       myOpt.innerText = text;
+        //       return myOpt;
+        // }
+
+        // var opt = new Option('Mytext', 'Myvalue');
+        //    console.log(opt);
+        //
+        // var y = myOption('Mytext', 'Myvalue');
+        //     console.log(y);
+
+    });
+    // Конструктор опций
+    // new Option(text, value, defaultSelected, selected);
+    // defaultSelected = Селект выбран по умолчанию
+
+
+
+    </script>
+</head>
+<body>
+
+    <h3>A demonstration of how to access a SELECT element</h3>
+
+    <select id="mySelect">
+      <option value="">Яблоко</option>
+      <option>Груша</option>
+      <option>Банан</option>
+      <option>Панда</option>
+    </select>
+
+  <button id="tryit">Пробовать</button>
+
+
+  <select id="mySelection"></select>
+  <p id="demo"></p>
+
+</body>
+</html>
