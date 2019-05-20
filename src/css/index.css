@@ -3,18 +3,14 @@ html{
 }
 body{
     background: antiquewhite;
-    display: flex; // FlexBox
-    align-items: center;
+    display: flex;
     justify-content: center;
 }
 .form-wrap {
     width: 550px;
     background: lightsalmon;
     border-radius: 20px;
-    position: fixed;
-    display: block;
-    max-width: 100%;
-    height: auto;
+
 
 }
 .form-wrap *{transition: .1s linear}
@@ -39,10 +35,10 @@ form {
     color: #7b7b7b;
 }
 .form-wrap:after, form div:after {
-    content: "";
+ /*   content: "";
     display: flex;
     margin: auto;
-    clear: both;
+    clear: both;*/
 }
 form div {
     margin-bottom: 15px;
@@ -61,4 +57,7 @@ form div {
     font-family: Gill Sans Extrabold, cursive;
     font-size: 20px;
     color: #7b7b7b;
+}
+.MyForm{
+    float:left;
 }

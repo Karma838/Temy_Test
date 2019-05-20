@@ -1,24 +1,30 @@
+
+
+
 window.addEventListener("load", function () {
 
     var sbmBtn = document.getElementById("submit");
     fullfil();
+    render();
     sbmBtn.addEventListener("click",()=>{
         event.preventDefault();
-        validate();
+        if(validate()){
+           SendData(getUsers);
+           render();
+           ClearForm();
+        };
 
     })
-
-
-
-
 });
 
-var getCountry = "http://localhost:3000/countries";
-var getStates = "http://localhost:3000/states";
-var getCities = "http://localhost:3000/cities";
-var countrySelect = document.getElementById("Country");
-var statesSelect = document.getElementById("State");
-var citiesSelect = document.getElementById("City");
+var getCountry = "http://localhost:3000/countries",
+    getStates = "http://localhost:3000/states",
+    getCities = "http://localhost:3000/cities",
+    getUsers = "http://localhost:3000/users",
+    countrySelect = document.getElementById("Country"),
+    statesSelect = document.getElementById("State"),
+    citiesSelect = document.getElementById("City");
+
 
 
 function Getter(address) {
@@ -34,26 +40,89 @@ function Getter(address) {
        console.log("Error:" ,xhr.status, xhr.statusText);
     } else {
         var myResponse = JSON.parse(xhr.responseText);
-        if(address === getCountry){
-
-        //    console.log(xhr, myResponse);
-       //     myResponse.map(item => console.log(item))
-        }else if(address === getStates){
-
-        //    console.log(xhr, myResponse);
-      //      myResponse.map(item => console.log(item))
-        }
-        else if(address === getCities){
-
-         //   console.log(xhr, myResponse);
-      //      myResponse.map(item => console.log(item))
-        }
-
     }
 return myResponse;
+}
+
+function render()
+{
+
+    let ul = document.getElementById("list");
+    ul.removeAttribute("hidden");
+    ul.innerText = "";
+    let users = Getter(getUsers);
+
+    let countries = Getter(getCountry);
+    let states = Getter(getStates);
+    let cities = Getter(getCities);
+
+
+
+    users.forEach((user)=>{
+        let date =  new Date(user.createdAt);
+        let countryU,stateU,cityU;
+
+
+        countries.forEach((country)=>{
+            if(country.id == user.country_id)
+            {
+                countryU = country;
+            }
+        })
+        states.forEach((state)=>{
+            if(state.id == user.state_id)
+            {
+                stateU = state;
+            }
+        })
+        cities.forEach((city)=>{
+            if(city.id == user.city_id)
+            {
+                cityU = city;
+            }
+        })
+
+
+       let li =  document.createElement("li");
+        li.innerText = `Name: ${user.name}
+        Email:${user.email} 
+        Phone number: ${user.phone_number} 
+        Country, state, city : ${countryU.name} , ${stateU.name} , ${cityU.name} 
+        Date of Creation: ${date}
+        `;
+        ul.appendChild(li);
+    })
 
 }
 
+function SendData(address){
+
+    let xhr = new XMLHttpRequest(),
+        phone = document.getElementById('phone'),
+        name = document.getElementById("name"),
+        email = document.getElementById("email"),
+        countrySelect = document.getElementById("Country"),
+        statesSelect = document.getElementById("State"),
+        citiesSelect = document.getElementById("City");
+
+    xhr.open("POST",address , false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    let someUser = {
+        id:null,
+        name:name.value,
+        email:email.value,
+        phone_number:phone.value,
+        address:null,
+        about_me:null,
+        country_id:countrySelect.options[countrySelect.selectedIndex].id,
+        state_id:statesSelect.options[statesSelect.selectedIndex].id,
+        city_id:citiesSelect.options[citiesSelect.selectedIndex].id,
+        createdAt:null
+    };
+ //  console.log(someUser);
+    let data = JSON.stringify(someUser);
+    xhr.send(data);
+}
 
 function fullfil() {
 
@@ -65,12 +134,11 @@ function fullfil() {
 
     countries.forEach(function(country){
         let option = new Option(country.name);
-        option.id = country.name;
+        option.id = country.id;
         countrySelect.appendChild(option);
     });
     countrySelect.selectedIndex = -1;
     countrySelect.addEventListener('change', function() {
-      //  console.log(this.value);
         if(this.value === "Ukraine"){
             ClearStates();
             states.forEach(function(state){
@@ -119,43 +187,49 @@ function fullfil() {
     {
         citiesSelect.options.length = 0;
     }
-
 }
 
+function ClearForm()
+{
+    let  countrySelect = document.getElementById("Country"),
+        statesSelect = document.getElementById("State"),
+        citiesSelect = document.getElementById("City"),
+        phone = document.getElementById('phone'),
+        name = document.getElementById("name"),
+        email = document.getElementById("email");
 
-
-
-
-
+    name.value = "";
+    email.value = "";
+    phone.value = "";
+    countrySelect.selectedIndex = -1;
+    statesSelect.selectedIndex = -1;
+    citiesSelect.selectedIndex = -1;
+}
 
 function validate(){
-    let checkemail ,
-     checkname ,
-     checkphone ,
-     checkCountry ,
-     checkState ,
-     checkCity ,
-     phone = document.getElementById('phone'),
-     name = document.getElementById("name"),
-     email = document.getElementById("email"),
-     phoneRGEX = /^[+]?(1\-|1\s|1|\d{3}\-|\d{3}\s|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/,
-     nameRGEX =  /^[A-Za-z]+$/,
-     emailRGEX  = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-     phoneResult = phoneRGEX.test(phone.value),
-     nameResult = nameRGEX.test(name.value),
-     emailResult = emailRGEX.test(email.value);
-  /*  phone.classList.add("OK");
-    name.classList.add("OK");
-    email.classList.add("OK");
-    countrySelect.classList.add("OK");
-    statesSelect.classList.add("OK");
-    citiesSelect.classList.add("OK");
-*/
+    let checkemail,
+        checkname ,
+        checkphone ,
+        checkCountry ,
+        checkState ,
+        checkCity ,
+        countrySelect = document.getElementById("Country"),
+        statesSelect = document.getElementById("State"),
+        citiesSelect = document.getElementById("City"),
+        phone = document.getElementById('phone'),
+        name = document.getElementById("name"),
+        email = document.getElementById("email"),
+        phoneRGEX = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+        nameRGEX =  /^([a-zA-Z0-9]+|[a-zA-Z0-9]+\s{1}[a-zA-Z0-9]{1,}|[a-zA-Z0-9]+\s{1}[a-zA-Z0-9]{3,}\s{1}[a-zA-Z0-9]{1,})$/,
+        emailRGEX  = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+        phoneResult = phoneRGEX.test(phone.value),
+        nameResult = nameRGEX.test(name.value),
+        emailResult = emailRGEX.test(email.value);
+   // console.log("name:",name.value);
     if(nameResult && name.value!==""){
         name.classList.remove("error");
         name.classList.add("OK");
         checkname = true;
-       // console.log("True name");
     }else if(name.value ==="" || !nameResult) {
         name.classList.remove("OK");
         name.classList.add("error");

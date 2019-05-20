@@ -11,14 +11,14 @@
 </head>
 <body>
 <div class="form-wrap">
-<form id = "MyForm">
+<form class = "MyForm">
     <div>
     <h3>Your name:</h3>
     <input type="text" id='name' placeholder="Your name" class="peach"/>
-    <h3>Your email:</h3>
+        <h3>Your email:</h3>
+        <input type="text" id='email' placeholder="123@example.com" class="peach"/>
     </div>
     <div>
-    <input type="text" id='email' placeholder="123@example.com" class="peach"/>
     <h3>Your country:</h3>
     <select id="Country" class="peach">
 
@@ -34,13 +34,18 @@
     </div>
     <div>
     <h3>Your phone:</h3>
-    <input type="tel" id='phone' class="peach" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"  placeholder="123-456-7890"/>
+    <input type="tel" id='phone' class="peach" placeholder="380*********"/>
     </div>
     <div>
     <input type="submit" id="submit" class="peach" value="Press Me"/>
     </div>
-
 </form>
+</div>
+<div >
+    <form class = "MyForm">
+        <ul id="list" hidden>
+        </ul>
+    </form>
 </div>
 </body>
 <script src="index.js"></script>
